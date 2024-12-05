@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>Disco 0.1.0</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px;
+      }
+
+      ul > li {
+        pointer: cursor;
+      }
+
+      input,
+      textarea,
+      button {
+        border-radius: 3px;
+        border: 1px solid #999;
+        width: 100%;
+        padding: 5px;
+        background: white;
+      }
+
+      textarea {
+        height: 300px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Disco</h1>
+
+    <main>
+      <aside>
+        <h2>Existing Functions</h2>
+        <ul id="list"></ul>
+      </aside>
+
+      <form id="create" action="/" method="POST">
+        <h2>Create/Update Function</h2>
+        <label>Key: <input name="key" /></label><br />
+        <label
+          >Script:
+          <textarea name="script"></textarea></label
+        ><br />
+        <button>Save</button>
+      </form>
+
+      <form id="test">
+        <h2>Test/Run</h2>
+        <label>Key: <input name="key" /></label><br />
+        <button>Test</button>
+        <br />
+        <pre id="result"></pre>
+      </form>
+    </main>
+
+    <script>
+      document
+        .querySelector("#test")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const form = new FormData(event.target);
+          const response = await fetch(`/${form.get("key")}`);
+          const result = await response.text();
+          document.querySelector("#result").innerText = result;
+        });
+
+      //--list--
+      for (const [key, value] of Object.entries(list)) {
+        const li = document.createElement("li");
+        li.innerText = `${key}`;
+        li.addEventListener("click", (event) => {
+          document.querySelector("form#create input[name=key]").value = key;
+          document.querySelector("form#create textarea[name=script]").value =
+            value;
+          document.querySelector("form#test input[name=key]").value = key;
+        });
+        document.querySelector("#list").append(li);
+      }
+    </script>
+  </body>
+</html>
